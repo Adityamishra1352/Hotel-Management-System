@@ -15,6 +15,8 @@ public class Hotel {
     String email_string;
     @Autowired
     private BookingsManagement bookings;
+    @Autowired
+    private Customers customers;
     private JdbcTemplate jdbcTemplate;
 
     public Hotel(JdbcTemplate jdbcTemplate) {
@@ -64,6 +66,9 @@ public class Hotel {
                     break;
                 case 2:
                     bookings.myBookings(email_string);
+                    break;
+                case 3:
+                    customers.getDetails(email_string);
                     break;
 
             }
