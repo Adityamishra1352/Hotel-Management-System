@@ -64,7 +64,7 @@ public class Hotel {
         Scanner sc = new Scanner(System.in);
         do {
             //System.out.println("Enter your choice:");
-            System.out.println("1. Search Rooms\n 2. My Bookings \n 3. My Profile \n 4.Change Password \n 5.Cancel Booking \n 6. Logout");
+            System.out.println("1. Search Rooms\n 2. My Bookings \n 3. My Profile \n 4.Change Password \n 5.Book Rooms \n 6. Logout");
             switch (choice = sc.nextInt()) {
                 case 1:
                     System.out.println("Enter your check in date(DDMMYYYY): ");
@@ -76,6 +76,9 @@ public class Hotel {
                     System.out.println("Enter the number of rooms: ");
                     int rooms = sc.nextInt();
                     bookings.checkRooms(checkin, checkout, rooms);
+                    System.out.println("Enter your desired room number");
+                    int room_number=sc.nextInt();
+                    bookings.bookRoom(room_number, checkin, checkout, guests, rooms, email_string);
                     break;
                 case 2:
                     bookings.myBookings(email_string);
@@ -95,7 +98,8 @@ public class Hotel {
                     }else{
                         System.out.println("Password doesn't match, try again!!");
                     }
-
+                    break;
+                case 5:
                     break;
             }
         }while(choice!=6);

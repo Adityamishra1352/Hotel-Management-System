@@ -75,7 +75,9 @@ public class BookingsManagement {
                 System.out.println("Check-out: " + checkOut);
                 System.out.println("Room Type: " + roomType);
                 System.out.println("Total Amount: " + totalAmount);
-                System.out.println("Status: " + status);
+                if(status.equals("B")){
+                    System.out.println("Status: Booked");
+                }
                 System.out.println("--------------------------");
             }
 
@@ -84,4 +86,25 @@ public class BookingsManagement {
         }
     }
 
+    public void bookRoom(int roomNumber, String checkin, String checkout, int guests, int rooms, String email) {
+        sql="SELECT COUNT(*) FROM room WHERE room_id = ? AND status = ?";
+        int rows=jdbcTemplate.queryForObject(sql, Integer.class, roomNumber, "B");
+        if(rows>0){
+            System.out.println("Room is booked");
+        }else{
+            sql="UPDATE room set status = ? where room_id = ?";
+            int rowsUpdated=jdbcTemplate.update(sql, "B", roomNumber);
+            if(rowsUpdated>0){
+                sql="SELECT customer_id FROM CUSTOMERS where email=?";
+                int customer_id=jdbcTemplate.queryForObject(sql, Integer.class, email);
+                sql="SELECT price from room where room_id = ?";
+                int price=jdbcTemplate.queryForObject(sql, Integer.class, roomNumber);
+                sql="INSERT INTO bookings (customer_id, room_id, check_in, check_out, status, total_amount) VALUES (?, ?, ?, ?, ?, ?)";
+                int rowsInserted=jdbcTemplate.update(sql,customer_id, roomNumber, checkin, checkout, "B", price);
+                if(rowsInserted>0){
+                    System.out.println("Room Number: "+roomNumber+" booked successfully");
+                }
+            }
+        }
+    }
 }
