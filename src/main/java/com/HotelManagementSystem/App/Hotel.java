@@ -35,15 +35,28 @@ public class Hotel {
     }
 
     public int login(String email, String password) {
-        sql="SELECT COUNT(*) FROM CUSTOMERS WHERE EMAIL=? AND PASSWORD=?";
-        rows=jdbcTemplate.queryForObject(sql, Integer.class, email, password);
-        if(rows==1){
-            email_string=email;
-            return 1;
 
-        }else{
-            return 0;
+        String sql = "SELECT COUNT(*) FROM customers " +
+                "WHERE LOWER(TRIM(email)) = LOWER(TRIM(?)) " +
+                "AND TRIM(password) = TRIM(?)";
+
+        System.out.println("Email received: [" + email + "]");
+        System.out.println("Password length: " + password.length());
+
+        Integer rows = jdbcTemplate.queryForObject(
+                sql, Integer.class, email.trim(), password.trim()
+        );
+
+        System.out.println("Matching rows: " + rows);
+
+        if (rows != null && rows > 0) {
+            email_string = email.trim();
+            System.out.println("Login successful!");
+            return 1;
         }
+
+        System.out.println("Incorrect email or password");
+        return 0;
     }
 
     public void manage() {
@@ -70,7 +83,20 @@ public class Hotel {
                 case 3:
                     customers.getDetails(email_string);
                     break;
+                case 4:
+                    System.out.println("Enter your current password");
+                    String password_old= sc.next();
+                    System.out.println("Enter your new password");
+                    String password_new = sc.next();
+                    System.out.println("Enter your new password again");
+                    String password_new2 = sc.next();
+                    if(password_new.equals(password_new2)){
+                        customers.changePassword(email_string, password_old, password_new, password_new2);
+                    }else{
+                        System.out.println("Password doesn't match, try again!!");
+                    }
 
+                    break;
             }
         }while(choice!=6);
     }

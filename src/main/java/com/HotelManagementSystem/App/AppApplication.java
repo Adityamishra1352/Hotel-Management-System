@@ -22,10 +22,9 @@ public class AppApplication {
 			choice=sc.nextInt();
 			switch(choice){
 				case 1: System.out.println("Email address: ");
-				String email=sc.nextLine();
-				sc.nextLine();
+				String email=sc.next();
 				System.out.println("Enter your password: ");
-				String password=sc.nextLine();
+				String password=sc.next();
 				int result=hotel.login(email, password);
 				if(result==1){
 					System.out.println("User Successfully Logged In!!");
