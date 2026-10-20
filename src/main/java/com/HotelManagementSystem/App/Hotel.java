@@ -64,7 +64,7 @@ public class Hotel {
         Scanner sc = new Scanner(System.in);
         do {
             //System.out.println("Enter your choice:");
-            System.out.println("1. Search Rooms\n 2. My Bookings \n 3. My Profile \n 4.Change Password \n 5.Book Rooms \n 6. Logout");
+            System.out.println("1. Search Rooms\n 2. My Bookings \n 3. My Profile \n 4.Change Password \n 5.Cancel Bookings" + " \n 6. Logout");
             switch (choice = sc.nextInt()) {
                 case 1:
                     System.out.println("Enter your check in date(DDMMYYYY): ");
@@ -100,6 +100,10 @@ public class Hotel {
                     }
                     break;
                 case 5:
+                    bookings.myBookings(email_string);
+                    System.out.println("Enter the room number for which you wish to cancel");
+                    int roomNumber=sc.nextInt();
+                    bookings.cancelBooking(roomNumber, email_string);
                     break;
             }
         }while(choice!=6);

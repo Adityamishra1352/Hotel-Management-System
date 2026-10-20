@@ -52,7 +52,7 @@ public class BookingsManagement {
         if (rows > 0) {
 
             sql = "SELECT a.booking_id, a.check_in, a.check_out, " +
-                    "r.room_type, a.total_amount, a.status " +
+                    "r.room_type, a.total_amount, a.status, r.room_id " +
                     "FROM bookings a " +
                     "JOIN customers c ON a.customer_id = c.customer_id " +
                     "JOIN room r ON a.room_id = r.room_id " +
@@ -69,8 +69,10 @@ public class BookingsManagement {
                 String roomType = (String) booking.get("room_type");
                 int totalAmount = (Integer) booking.get("total_amount");
                 String status = (String) booking.get("status");
+                int room_id = (Integer)booking.get("room_id");
 
                 System.out.println("Booking ID: " + bookingId);
+                System.out.println("Room Number: "+room_id);
                 System.out.println("Check-in: " + checkIn);
                 System.out.println("Check-out: " + checkOut);
                 System.out.println("Room Type: " + roomType);
@@ -105,6 +107,25 @@ public class BookingsManagement {
                     System.out.println("Room Number: "+roomNumber+" booked successfully");
                 }
             }
+        }
+    }
+
+    public void cancelBooking(int roomNumber, String email) {
+        sql="SELECT COUNT(*) FROM room a, bookings b, customers c where a.room_id = b.room_id and b.customer_id=c.customer_id and c.email=? and b.room_id = ?";
+        int rows=jdbcTemplate.queryForObject(sql, Integer.class, email, roomNumber);
+        if (rows>0){
+            sql="UPDATE room set status = NULL where room_id = ?";
+            int rowsUpdated = jdbcTemplate.update(sql, roomNumber);
+            if(rowsUpdated>0){
+                sql="DELETE from bookings where room_id = ?";
+                int rowsDeleted=jdbcTemplate.update(sql,roomNumber);
+                if(rowsDeleted>0) {
+                    System.out.println("Bookings cancelled successfully");
+                }
+            }
+        }
+        else{
+            System.out.println("Booking not found");
         }
     }
 }
